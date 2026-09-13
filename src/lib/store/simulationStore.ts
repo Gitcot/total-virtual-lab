@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { AsynchronousMotor, MotorType, MechanicalApplication, Nameplate, ConnectionType, HardwareFaults } from '../engine/electrical/AsynchronousMotor';
 
+export type { MotorType, MechanicalApplication };
+
 export type StartMethod = 'DOL_STAR' | 'DOL_DELTA' | 'STAR_DELTA' | 'VFD' | 'ROTORIC';
 export type FaultCode = 'NONE' | 'OVERHEAT' | 'OVERLOAD' | 'LOCKED_ROTOR' | 'PHASE_LOSS_ALARM' | 'HIGH_VIBRATION';
 export type AppMode = 'STUDENT' | 'EXPERT';

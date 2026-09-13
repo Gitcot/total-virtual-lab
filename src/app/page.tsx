@@ -136,7 +136,7 @@ export default function Home() {
           </button>
 
           <a 
-            href="https://tally.so/" 
+            href="https://tally.so/r/rjNKKX" 
             target="_blank" 
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-3 py-1.5 rounded text-xs font-bold transition-all border bg-slate-800 text-purple-400 border-slate-600 hover:border-purple-500 hover:text-white hover:bg-purple-600"

@@ -71,14 +71,14 @@ export default function Home() {
               <section>
                 <h3 className="text-lg font-bold text-blue-400 border-b border-slate-700 pb-2 mb-3">1. Les Profils Utilisateurs</h3>
                 <ul className="list-disc pl-5 space-y-2">
-                  <li><strong className="text-white">GMAO APPRENANT :</strong> Mode d&apos;évaluation Serious Game. L&apos;utilisateur reçoit des Ordres de Travail générés aléatoirement. Les paramètres de conception sont bloqués. L&apos;objectif est de diagnostiquer et réparer sans provoquer d&apos;accident.</li>
-                  <li><strong className="text-white">INGÉNIERIE :</strong> Mode bac à sable. Le technicien a accès à la modification complète des paramètres du moteur et de la charge mécanique pour tester le dimensionnement de l&apos;installation.</li>
+                  <li><strong className="text-white">APPRENANT :</strong> Mode d&apos;évaluation . L&apos;utilisateur reçoit des Ordres de Travail générés aléatoirement. Les paramètres de conception sont bloqués. L&apos;objectif est de diagnostiquer et réparer sans provoquer d&apos;accident.</li>
+                  <li><strong className="text-white">INGÉNIERIE :</strong> Le technicien a accès à la modification complète des paramètres du moteur et de la charge mécanique pour tester le dimensionnement de l&apos;installation.</li>
                 </ul>
               </section>
               <section>
                 <h3 className="text-lg font-bold text-orange-400 border-b border-slate-700 pb-2 mb-3">2. Outils Formateurs & Sécurité</h3>
                 <ul className="list-disc pl-5 space-y-2">
-                  <li><strong className="text-white">INJECTION PANNES (Formateur) :</strong> En mode Ingénierie, ce panneau caché permet de saboter l&apos;installation en provoquant des sous-tensions, des pertes de phases ou des grippages mécaniques.</li>
+                  <li><strong className="text-white">INJECTION PANNES (Formateur) :</strong> En mode Ingénierie, ce panneau  permet de saboter l&apos;installation en provoquant des sous-tensions, des pertes de phases ou des grippages mécaniques.</li>
                   <li><strong className="text-white">INTERVENTIONS (LOTO) :</strong> Le module de réparation. <strong>Important :</strong> Conformément aux règles de consignation, toute intervention matérielle est refusée si le moteur est sous tension.</li>
                 </ul>
               </section>
@@ -91,7 +91,7 @@ export default function Home() {
               <div className="flex items-center gap-3">
                 <div className="bg-blue-900/50 p-3 rounded-full border border-blue-500/50"><Code className="text-blue-400 w-6 h-6" /></div>
                 <div>
-                  <p className="text-xs text-slate-500 uppercase tracking-widest">Architecte Logiciel & Ingénierie</p>
+                  <p className="text-xs text-slate-500 uppercase tracking-widest">Concepteur</p>
                   <p className="text-lg font-bold text-white tracking-wide">OLINOUDE OLIVIER</p>
                 </div>
               </div>

@@ -1,9 +1,9 @@
 'use client'; 
 import { useEffect, useRef, useState } from "react";
 import { 
-  Activity, Gauge, AlertTriangle, Info, Lightbulb, Eye, Zap, Search, ShieldAlert, 
+  Activity, Gauge, AlertTriangle, Info, Eye, ShieldAlert, 
   Wrench, Settings2, GraduationCap, HardHat, ClipboardList, CheckCircle2, Circle, Play, Square, Database, RefreshCcw, User, Award, BookOpen, X, Code,
-  LineChart as ChartIcon , MessageSquarePlus
+  LineChart as ChartIcon, MessageSquarePlus 
 } from "lucide-react";
 import { useSimulationStore, MotorType, StartMethod, MechanicalApplication } from "@/lib/store/simulationStore";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
@@ -13,12 +13,13 @@ import PhysicalMotorSVG from "@/components/svg-models/PhysicalMotorSVG";
 
 export default function Home() {
   const [isMounted, setIsMounted] = useState(false);
-  const [guideOpen, setGuideOpen] = useState(false); // État pour le manuel utilisateur
+  const [guideOpen, setGuideOpen] = useState(false);
   
+  // CORRECTION: 'loadTorque' a été retiré ici pour éviter l'erreur "defined but never used"
   const { 
     appMode, setAppMode, missionActive, currentMission, missionSteps, generateRandomMission, userProfile,
     powerOn, motorType, startMethod, vfdFreq, actualVfdFreq, rotoricStep, 
-    appType, loadParamPct, loadTorque, processMetrics, nameplate,
+    appType, loadParamPct, processMetrics, nameplate,
     displayRpm, displayCurrent, displayTorque, temperature, acceleration, vibrationRms, history, fault, faultMsg, faultAdvice,
     instructorMode, hardwareFaults, toggleInstructorMode, setHardwareFault, repairHardware,
     togglePower, ackFault, setMotorType, setStartMethod, updateNameplate, setAppType, setLoadParam, setVfdFreq, setRotoricStep, tick 
@@ -59,32 +60,31 @@ export default function Home() {
   return (
     <div className="h-screen w-screen bg-slate-950 flex flex-col font-sans text-slate-300 overflow-hidden relative">
       
-      {/* MODALE : MANUEL D'UTILISATION SIGNÉ */}
       {guideOpen && (
         <div className="absolute inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
           <div className="bg-slate-900 border-t-4 border-blue-500 rounded-xl shadow-2xl w-full max-w-3xl flex flex-col max-h-[90vh]">
             <div className="flex justify-between items-center p-6 border-b border-slate-700">
-              <h2 className="text-2xl font-bold text-white flex items-center gap-3"><BookOpen className="text-blue-400 w-8 h-8" /> GUIDE D'UTILISATION - TOTAL VIRTUAL LAB</h2>
+              <h2 className="text-2xl font-bold text-white flex items-center gap-3"><BookOpen className="text-blue-400 w-8 h-8" /> GUIDE D&apos;UTILISATION - TOTAL VIRTUAL LAB</h2>
               <button onClick={() => setGuideOpen(false)} className="text-slate-400 hover:text-white bg-slate-800 p-2 rounded-full transition-colors"><X className="w-5 h-5" /></button>
             </div>
             <div className="p-6 overflow-y-auto custom-scrollbar flex flex-col gap-6 text-sm leading-relaxed">
               <section>
                 <h3 className="text-lg font-bold text-blue-400 border-b border-slate-700 pb-2 mb-3">1. Les Profils Utilisateurs</h3>
                 <ul className="list-disc pl-5 space-y-2">
-                  <li><strong className="text-white">GMAO APPRENANT :</strong> Mode d'évaluation Serious Game. L'utilisateur reçoit des Ordres de Travail générés aléatoirement. Les paramètres de conception sont bloqués. L'objectif est de diagnostiquer et réparer sans provoquer d'accident.</li>
-                  <li><strong className="text-white">INGÉNIERIE :</strong> Mode bac à sable. Le technicien a accès à la modification complète des paramètres du moteur et de la charge mécanique pour tester le dimensionnement de l'installation.</li>
+                  <li><strong className="text-white">GMAO APPRENANT :</strong> Mode d&apos;évaluation Serious Game. L&apos;utilisateur reçoit des Ordres de Travail générés aléatoirement. Les paramètres de conception sont bloqués. L&apos;objectif est de diagnostiquer et réparer sans provoquer d&apos;accident.</li>
+                  <li><strong className="text-white">INGÉNIERIE :</strong> Mode bac à sable. Le technicien a accès à la modification complète des paramètres du moteur et de la charge mécanique pour tester le dimensionnement de l&apos;installation.</li>
                 </ul>
               </section>
               <section>
                 <h3 className="text-lg font-bold text-orange-400 border-b border-slate-700 pb-2 mb-3">2. Outils Formateurs & Sécurité</h3>
                 <ul className="list-disc pl-5 space-y-2">
-                  <li><strong className="text-white">INJECTION PANNES (Formateur) :</strong> En mode Ingénierie, ce panneau caché permet de saboter l'installation en provoquant des sous-tensions, des pertes de phases ou des grippages mécaniques.</li>
+                  <li><strong className="text-white">INJECTION PANNES (Formateur) :</strong> En mode Ingénierie, ce panneau caché permet de saboter l&apos;installation en provoquant des sous-tensions, des pertes de phases ou des grippages mécaniques.</li>
                   <li><strong className="text-white">INTERVENTIONS (LOTO) :</strong> Le module de réparation. <strong>Important :</strong> Conformément aux règles de consignation, toute intervention matérielle est refusée si le moteur est sous tension.</li>
                 </ul>
               </section>
               <section>
                 <h3 className="text-lg font-bold text-green-400 border-b border-slate-700 pb-2 mb-3">3. Télémétrie ISO 10816</h3>
-                <p>Le simulateur intègre la norme ISO 10816 pour les vibrations industrielles. Une vitesse RMS supérieure à <span className="text-red-400 font-bold">11.2 mm/s</span> provoque une alarme critique d'arrêt matériel pour prévenir la destruction des paliers.</p>
+                <p>Le simulateur intègre la norme ISO 10816 pour les vibrations industrielles. Une vitesse RMS supérieure à <span className="text-red-400 font-bold">11.2 mm/s</span> provoque une alarme critique d&apos;arrêt matériel pour prévenir la destruction des paliers.</p>
               </section>
             </div>
             <div className="bg-slate-950 p-6 border-t border-slate-800 rounded-b-xl flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -131,13 +131,12 @@ export default function Home() {
 
           <button onClick={() => { setMaintenanceOpen(!maintenanceOpen); if(instructorMode) toggleInstructorMode(); }} className={`flex items-center gap-2 px-3 py-1.5 rounded text-xs font-bold transition-all border ${maintenanceOpen ? 'bg-blue-500 text-white border-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]' : 'bg-slate-800 text-slate-400 border-slate-600 hover:border-blue-400 hover:text-blue-400'}`}><Wrench className="w-4 h-4" /> INTERVENTIONS</button>
 
-          {/* BOUTON GUIDE DISCRET */}
           <button onClick={() => setGuideOpen(true)} className="flex items-center justify-center w-8 h-8 rounded-full bg-slate-800 hover:bg-blue-600 text-slate-300 hover:text-white transition-colors border border-slate-700 hover:border-blue-500" title="Guide d'Utilisation">
             <BookOpen className="w-4 h-4" />
           </button>
-          {/* NOUVEAU BOUTON : FEEDBACK / AMÉLIORATIONS */}
+
           <a 
-            href="LIEN_VERS_TON_FORMULAIRE_OU_CANNY" 
+            href="https://tally.so/" 
             target="_blank" 
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-3 py-1.5 rounded text-xs font-bold transition-all border bg-slate-800 text-purple-400 border-slate-600 hover:border-purple-500 hover:text-white hover:bg-purple-600"
@@ -145,6 +144,7 @@ export default function Home() {
           >
             <MessageSquarePlus className="w-4 h-4" /> FEEDBACK
           </a>
+
           <div className="flex items-center gap-2 text-xs font-mono text-white bg-slate-950 px-3 py-1.5 rounded border border-slate-700 ml-2">
             <div className={`w-3 h-3 rounded-full shadow-inner ${fault !== 'NONE' ? 'bg-red-500 animate-pulse' : (powerOn ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)]' : 'bg-slate-600')}`}></div>
             {fault !== 'NONE' ? 'DÉFAUT ACTIF' : (powerOn ? 'SYSTÈME EN LIGNE' : 'HORS TENSION')}
@@ -191,7 +191,7 @@ export default function Home() {
                     <h3 className="text-white text-sm font-bold flex items-center gap-2"><ClipboardList className="w-4 h-4 text-blue-400"/> {currentMission.title}</h3>
                     <span className="bg-slate-950 px-2 py-1 rounded text-[10px] font-mono text-slate-400">{currentMission.id}</span>
                   </div>
-                  <p className="text-slate-300 text-xs leading-relaxed mb-4 italic">"{currentMission.context}"</p>
+                  <p className="text-slate-300 text-xs leading-relaxed mb-4 italic">&quot;{currentMission.context}&quot;</p>
                   <div className="bg-slate-950 p-2 rounded text-[10px] font-mono text-slate-400 border border-slate-800">
                     <span className="text-blue-400 font-bold">ÉQUIPEMENT:</span> Moteur Asynchrone Pn: {nameplate.Pn}kW<br/>
                     <span className="text-blue-400 font-bold">PROCÉDÉ:</span> {currentMission.equipmentInfo}
@@ -206,7 +206,7 @@ export default function Home() {
                   {missionSteps[3] && <div className="mt-2 text-green-400 font-bold text-lg bg-green-950/50 py-2 px-4 rounded border border-green-800 text-center flex items-center justify-center gap-2"><Award className="w-6 h-6" /> MISSION VALIDÉE ! +100 POINTS</div>}
                 </div>
               </div>
-            ) : (<div className="text-slate-500 text-sm text-center py-6 font-mono">EN ATTENTE D'UN ORDRE D'INTERVENTION...</div>)}
+            ) : (<div className="text-slate-500 text-sm text-center py-6 font-mono">EN ATTENTE D&apos;UN ORDRE D&apos;INTERVENTION...</div>)}
           </div>
         )}
 
@@ -224,7 +224,7 @@ export default function Home() {
           <div className="bg-slate-900 p-4 rounded border border-slate-700 flex flex-col gap-3 shadow-md">
             <h2 className="text-xs font-bold text-slate-400 border-b border-slate-700 pb-2 flex items-center gap-2 uppercase tracking-wider"><Settings2 className="w-4 h-4"/> 1. Plaque Signalétique</h2>
             <select value={motorType} onChange={(e) => setMotorType(e.target.value as MotorType)} disabled={appMode === 'STUDENT'} className="w-full bg-slate-950 text-white p-2 rounded text-xs border border-slate-800 disabled:opacity-50">
-              <option value="SQUIRREL_CAGE">Cage d'Écureuil</option><option value="SLIP_RING">Rotor Bobiné</option>
+              <option value="SQUIRREL_CAGE">Cage d&apos;Écureuil (Induction)</option><option value="SLIP_RING">Rotor Bobiné (À bagues)</option>
             </select>
             <div className="grid grid-cols-2 gap-3 text-xs">
               <div><label className="text-slate-500 block mb-1">Pn (kW)</label><input type="number" step="0.5" value={nameplate.Pn} onChange={(e) => updateNameplate('Pn', Number(e.target.value))} disabled={appMode === 'STUDENT'} className="w-full bg-slate-800 p-1.5 rounded text-white border border-slate-700 disabled:opacity-50" /></div>
@@ -250,7 +250,7 @@ export default function Home() {
             <div className="text-xs mt-auto pt-2 border-t border-slate-800">
               <label className="text-slate-500 block mb-1">Mode de Démarrage</label>
               <select value={startMethod} onChange={(e) => setStartMethod(e.target.value as StartMethod)} className="w-full bg-slate-800 text-white p-2 rounded border border-slate-700">
-                {motorType === 'SQUIRREL_CAGE' ? (<><option value="DOL_DELTA">Direct Triangle</option><option value="DOL_STAR">Direct Étoile</option><option value="STAR_DELTA">Automatique Y/Δ</option><option value="VFD">Variateur (VFD)</option></>) : (<option value="ROTORIC">Démarrage Rotorique</option>)}
+                {motorType === 'SQUIRREL_CAGE' ? (<><option value="DOL_DELTA">Direct (DOL) Triangle</option><option value="DOL_STAR">Direct (DOL) Étoile</option><option value="STAR_DELTA">Automatique Y/Δ</option><option value="VFD">Variateur de Vitesse (VSD)</option></>) : (<option value="ROTORIC">Démarrage Rotorique</option>)}
               </select>
             </div>
             {startMethod === 'ROTORIC' && (<div className="flex gap-2 text-xs"><button onClick={() => setRotoricStep(0)} className={`flex-1 p-1.5 rounded border ${rotoricStep===0 ? 'bg-blue-600 text-white border-blue-500' : 'bg-slate-800 text-slate-400 border-slate-700'}`}>R Max</button><button onClick={() => setRotoricStep(1)} className={`flex-1 p-1.5 rounded border ${rotoricStep===1 ? 'bg-blue-600 text-white border-blue-500' : 'bg-slate-800 text-slate-400 border-slate-700'}`}>R Moy</button><button onClick={() => setRotoricStep(2)} className={`flex-1 p-1.5 rounded border ${rotoricStep===2 ? 'bg-green-600 text-white border-green-500' : 'bg-slate-800 text-slate-400 border-slate-700'}`}>CC</button></div>)}
@@ -276,34 +276,17 @@ export default function Home() {
           <div className="w-full xl:w-2/5 bg-slate-900 p-4 rounded border border-slate-700 flex flex-col gap-3 shadow-md">
              <h2 className="text-xs font-bold text-slate-400 border-b border-slate-700 pb-2 flex items-center gap-2 uppercase tracking-wider"><Gauge className="w-4 h-4"/> 4. Télémétrie Globale (ISO 10816)</h2>
              
-             {/* NOUVELLE GRILLE DE 6 JAUGES (INCLUANT VIBRATION ET ACCÉLÉRATION) */}
              <div className="grid grid-cols-2 md:grid-cols-3 gap-2 flex-1">
-                <div className="bg-slate-950 p-2 rounded border border-slate-800 flex flex-col justify-center items-center shadow-inner">
-                  <p className="text-[9px] text-slate-500 font-bold tracking-wider">VITESSE</p>
-                  <p className="text-xl font-mono text-white">{displayRpm.toFixed(0)} <span className="text-[10px] text-slate-500">rpm</span></p>
-                </div>
-                <div className="bg-slate-950 p-2 rounded border border-slate-800 flex flex-col justify-center items-center shadow-inner">
-                  <p className="text-[9px] text-slate-500 font-bold tracking-wider">COURANT</p>
-                  <p className={`text-xl font-mono ${displayCurrent > nameplate.In*1.15 ? 'text-red-500 font-bold' : 'text-blue-400'}`}>{displayCurrent.toFixed(1)} <span className="text-[10px] text-slate-500">A</span></p>
-                </div>
-                <div className="bg-slate-950 p-2 rounded border border-slate-800 flex flex-col justify-center items-center shadow-inner">
-                  <p className="text-[9px] text-slate-500 font-bold tracking-wider">TEMPÉRATURE</p>
-                  <p className={`text-xl font-mono ${temperature > 90 ? 'text-red-500 animate-pulse font-bold' : 'text-white'}`}>{temperature.toFixed(0)} <span className="text-[10px] text-slate-500">°C</span></p>
-                </div>
-                <div className="bg-slate-950 p-2 rounded border border-slate-800 flex flex-col justify-center items-center shadow-inner">
-                  <p className="text-[9px] text-slate-500 font-bold tracking-wider">COUPLE</p>
-                  <p className="text-xl font-mono text-orange-400">{displayTorque.toFixed(1)} <span className="text-[10px] text-slate-500">N.m</span></p>
-                </div>
-                {/* JAUGES VIBRATOIRES ET ACCÉLÉRATION */}
+                <div className="bg-slate-950 p-2 rounded border border-slate-800 flex flex-col justify-center items-center shadow-inner"><p className="text-[9px] text-slate-500 font-bold tracking-wider">VITESSE</p><p className="text-xl font-mono text-white">{displayRpm.toFixed(0)} <span className="text-[10px] text-slate-500">rpm</span></p></div>
+                <div className="bg-slate-950 p-2 rounded border border-slate-800 flex flex-col justify-center items-center shadow-inner"><p className="text-[9px] text-slate-500 font-bold tracking-wider">COURANT</p><p className={`text-xl font-mono ${displayCurrent > nameplate.In*1.15 ? 'text-red-500 font-bold' : 'text-blue-400'}`}>{displayCurrent.toFixed(1)} <span className="text-[10px] text-slate-500">A</span></p></div>
+                <div className="bg-slate-950 p-2 rounded border border-slate-800 flex flex-col justify-center items-center shadow-inner"><p className="text-[9px] text-slate-500 font-bold tracking-wider">TEMPÉRATURE</p><p className={`text-xl font-mono ${temperature > 90 ? 'text-red-500 animate-pulse font-bold' : 'text-white'}`}>{temperature.toFixed(0)} <span className="text-[10px] text-slate-500">°C</span></p></div>
+                <div className="bg-slate-950 p-2 rounded border border-slate-800 flex flex-col justify-center items-center shadow-inner"><p className="text-[9px] text-slate-500 font-bold tracking-wider">COUPLE</p><p className="text-xl font-mono text-orange-400">{displayTorque.toFixed(1)} <span className="text-[10px] text-slate-500">N.m</span></p></div>
                 <div className="bg-slate-950 p-2 rounded border border-slate-800 flex flex-col justify-center items-center shadow-inner relative overflow-hidden">
                   <p className="text-[9px] text-slate-500 font-bold tracking-wider z-10">VIBRATION RMS</p>
                   <p className={`text-xl font-mono z-10 ${vibrationRms < 4.5 ? 'text-green-400' : vibrationRms < 7.1 ? 'text-yellow-400' : 'text-red-500 font-bold animate-pulse'}`}>{vibrationRms.toFixed(1)} <span className="text-[10px] text-slate-500">mm/s</span></p>
                   {vibrationRms > 11.2 && <div className="absolute inset-0 bg-red-500/20 animate-pulse"></div>}
                 </div>
-                <div className="bg-slate-950 p-2 rounded border border-slate-800 flex flex-col justify-center items-center shadow-inner">
-                  <p className="text-[9px] text-slate-500 font-bold tracking-wider">ACCÉLÉRATION</p>
-                  <p className="text-xl font-mono text-purple-400">{acceleration.toFixed(1)} <span className="text-[10px] text-slate-500">rad/s²</span></p>
-                </div>
+                <div className="bg-slate-950 p-2 rounded border border-slate-800 flex flex-col justify-center items-center shadow-inner"><p className="text-[9px] text-slate-500 font-bold tracking-wider">ACCÉLÉRATION</p><p className="text-xl font-mono text-purple-400">{acceleration.toFixed(1)} <span className="text-[10px] text-slate-500">rad/s²</span></p></div>
              </div>
 
              <div className="border-t border-slate-700 pt-2 mt-1 bg-slate-950/50 p-2 rounded">

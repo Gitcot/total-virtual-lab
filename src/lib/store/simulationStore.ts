@@ -21,7 +21,6 @@ interface SimulationState {
   vfdFreq: number; actualVfdFreq: number; rotoricStep: number; starDeltaPhase: 'STAR' | 'DELTA';
   appType: MechanicalApplication; loadParamPct: number; 
   
-  // NOUVELLES MESURES PHYSIQUES
   displayRpm: number; displayCurrent: number; displayTorque: number; loadTorque: number; temperature: number;
   acceleration: number; vibrationRms: number;
 
@@ -77,9 +76,11 @@ export const useSimulationStore = create<SimulationState>()(
       generateRandomMission: () => {
         const template = MISSION_TEMPLATES[Math.floor(Math.random() * MISSION_TEMPLATES.length)];
         let newAppType: MechanicalApplication = 'CONVEYOR', newMotorType: MotorType = 'SQUIRREL_CAGE', newStartMethod: StartMethod = 'DOL_DELTA', newPn = 4.0;
-        let newFaults: HardwareFaults = { voltageDrop: 1.0, phaseLoss: false, bearingWear: 1.0 };
         
-        if (template.targetRepair === 'BEARINGS') { newAppType = 'CONVEYOR'; newPn = 5.5; newFaults.bearingWear = 4.8; } // Usure critique -> Vibration garantie
+        // CORRECTION 1: const au lieu de let
+        const newFaults: HardwareFaults = { voltageDrop: 1.0, phaseLoss: false, bearingWear: 1.0 };
+        
+        if (template.targetRepair === 'BEARINGS') { newAppType = 'CONVEYOR'; newPn = 5.5; newFaults.bearingWear = 4.8; } 
         else if (template.targetRepair === 'GRID') { newAppType = 'PUMP'; newPn = 15.0; newStartMethod = 'VFD'; newFaults.voltageDrop = 0.75; } 
         else if (template.targetRepair === 'FUSES' && template.equipmentInfo.includes("Treuil")) { newAppType = 'HOIST'; newMotorType = 'SLIP_RING'; newStartMethod = 'ROTORIC'; newPn = 22.0; newFaults.phaseLoss = true; }
         else if (template.targetRepair === 'FUSES') { newAppType = 'MIXER'; newPn = 7.5; newStartMethod = 'STAR_DELTA'; newFaults.phaseLoss = true; }
@@ -159,7 +160,8 @@ export const useSimulationStore = create<SimulationState>()(
         const res = motor.update(dt, V_line, f, state.appType, state.loadParamPct, connection, R_ext_mult, state.hardwareFaults);
         let newFault = state.fault, newMsg = state.faultMsg, newAdvice = state.faultAdvice, newTimer = state.faultTimer;
 
-        let newSteps = [...state.missionSteps];
+        // CORRECTION 2: const au lieu de let
+        const newSteps = [...state.missionSteps];
         let mTimer = state.missionTimer;
         
         if (state.appMode === 'STUDENT' && state.missionActive && state.currentMission) {
@@ -188,7 +190,6 @@ export const useSimulationStore = create<SimulationState>()(
         }
 
         if (state.powerOn && state.fault === 'NONE') {
-          // NOUVELLE DÉTECTION : VIBRATION CRITIQUE (Norme ISO 10816 > 11.2 mm/s = DANGER)
           if (res.vibration > 11.2) {
              newFault = 'HIGH_VIBRATION'; newMsg = 'VIBRATION CRITIQUE (ISO 10816)'; 
              newAdvice = "Dépassement du seuil de 11.2 mm/s RMS. Destruction mécanique imminente. Vérifiez les roulements de l'arbre.";
@@ -211,25 +212,27 @@ export const useSimulationStore = create<SimulationState>()(
         if (newFault !== 'NONE' && state.powerOn) set({ powerOn: false });
 
         const sf = 0.15; 
+        
+        // CORRECTION 3: const au lieu de let
+        const newTime = state.timeElapsed + dt;
+        let newHistory = state.history;
+        if (newHistory.length === 0 || newTime - newHistory[newHistory.length - 1].time >= 0.1) {
+          newHistory = [...newHistory, { time: parseFloat(newTime.toFixed(1)), rpm: Math.round(res.motorRpm || 0), current: parseFloat((res.lineCurrent || 0).toFixed(1)), torque: parseFloat((res.motorTorque || 0).toFixed(1)) }].slice(-100);
+        }
+
         set({
           rawRpm: res.motorRpm, temperature: res.temp, faultTimer: newTimer, actualVfdFreq: newActualFreq,
-          acceleration: state.acceleration + (res.acceleration - state.acceleration) * 0.3, // Léger lissage
-          vibrationRms: res.vibration, // Réponse vibratoire directe
+          acceleration: state.acceleration + (res.acceleration - state.acceleration) * 0.3,
+          vibrationRms: res.vibration, 
           missionSteps: newSteps, missionTimer: mTimer,
           displayRpm: state.displayRpm + ((isNaN(res.motorRpm)?0:res.motorRpm) - state.displayRpm) * sf,
           displayCurrent: state.displayCurrent + ((isNaN(res.lineCurrent)?0:res.lineCurrent) - state.displayCurrent) * sf,
           displayTorque: state.displayTorque + ((isNaN(res.motorTorque)?0:res.motorTorque) - state.displayTorque) * sf,
           loadTorque: state.loadTorque + ((isNaN(res.loadTorque)?0:res.loadTorque) - state.loadTorque) * sf,
           processMetrics: res.process,
-          fault: newFault, faultMsg: newMsg, faultAdvice: newAdvice
+          fault: newFault, faultMsg: newMsg, faultAdvice: newAdvice,
+          timeElapsed: newTime, history: newHistory
         });
-
-        let newTime = state.timeElapsed + dt;
-        let newHistory = state.history;
-        if (newHistory.length === 0 || newTime - newHistory[newHistory.length - 1].time >= 0.1) {
-          newHistory = [...newHistory, { time: parseFloat(newTime.toFixed(1)), rpm: Math.round(res.motorRpm || 0), current: parseFloat((res.lineCurrent || 0).toFixed(1)), torque: parseFloat((res.motorTorque || 0).toFixed(1)) }].slice(-100);
-        }
-        set({ timeElapsed: newTime, history: newHistory });
       }
     }),
     { name: 'total-virtual-lab-storage', partialize: (state) => ({ appMode: state.appMode, userProfile: state.userProfile }) }

@@ -223,7 +223,7 @@ export const useSimulationStore = create<SimulationState>()(
         }
 
         set({
-          rawRpm: res.motorRpm, temperature: res.temp, faultTimer: newTimer, actualVfdFreq: newActualFreq,
+          temperature: res.temp, faultTimer: newTimer, actualVfdFreq: newActualFreq,
           acceleration: state.acceleration + (res.acceleration - state.acceleration) * 0.3,
           vibrationRms: res.vibration, 
           missionSteps: newSteps, missionTimer: mTimer,
